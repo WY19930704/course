@@ -23,19 +23,20 @@ export default {
   },
   methods: {
     submit () {
-      let account = this.account
-      let password = this.password
-      let data = new URLSearchParams()
-      data.append('admin', account)
-      data.append('password', password)
-      this.axios.post("/ykds-jingcai/app/jingcai/jcUser/login",data).then(res => {
-        console.log(res)
-        if(res.data.code == 200){
-          this.$router.push({
+       this.$router.push({
         path: `/index`
       })
-        }
-      })
+      // let account = this.account
+      // let password = this.password
+      // let data = new URLSearchParams()
+      // data.append('admin', account)
+      // data.append('password', password)
+      // this.axios.post("/ykds-jingcai/app/jingcai/jcUser/login",data).then(res => {
+      //   console.log(res)
+      //   if(res.data.code == 200){
+         
+      //   }
+      // })
     }
   }
 }

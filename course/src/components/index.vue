@@ -17,18 +17,18 @@
         <div class="clear"></div>
         <div class="content">
             <div class="conL">
-                <div><img class="icon" src="../assets/icon_zitidingdan@2x.png" alt=""></div>
+                <div @click="self()"><img class="icon" src="../assets/icon_zitidingdan@2x.png" alt=""></div>
                 <div class="conText">自提订单</div>
             </div>
             <div class="conR">
-                <div><img class="icon" src="../assets/icon_peisongdingdan@2x.png" alt=""></div>
+                <div @click="dispatching()"><img class="icon" src="../assets/icon_peisongdingdan@2x.png" alt=""></div>
                 <div class="conText">配送订单</div>
             </div>
         </div>
         <div class="clear"></div>
         <div class="content">
             <div class="conL">
-                <div><img class="icon" src="../assets/icon_duihuandingdan@2x.png" alt=""></div>
+                <div @click="exchange()"><img class="icon" src="../assets/icon_duihuandingdan@2x.png" alt=""></div>
                 <div class="conText">兑换订单</div>
             </div>
         </div>
@@ -46,6 +46,21 @@ export default{
     checked () {
       this.$router.push({
         path: '/goods'
+      })
+    },
+    self () {
+      this.$router.push({
+        path: '/selfLifting'
+      })
+    },
+    dispatching () {
+      this.$router.push({
+          path: '/dispatching'
+      })
+    },
+    exchange () {
+      this.$router.push({
+          path: '/exchange'
       })
     }
   }

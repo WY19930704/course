@@ -75,8 +75,6 @@ aside {
 body {
 	font-size: 1em;
 	line-height: 1rem;
-	font-family: "microsoft yahei" !important;
-/*	font-family: Helvetica, tahoma, arial, 'Microsoft YaHei', "微软雅黑", "sans-serif", "华文细黑";*/
 	min-width: 320px;
 	margin: 0 auto;
 	cursor: default;

@@ -1,27 +1,26 @@
 <template>
-  <div class="goods">
-      <div class="title">
+  <div class="selfLifting">
+    <div class="title">
         <div class="time" @click="pickData()"> {{time}} </div>
         <div class="unfinished">待收: <div class="number">{{unfinished}}</div></div>
         <div class="finished">实收: <div class="number">{{finished}}</div></div>
         <div class="clear"></div>
+    </div>
+    <div class="searchBtn">
+      <input type="text" placeholder="请输入姓名或者手机号查询">
+      <div>查询</div>
+      <span></span>
+    </div>
+    <div class="list" @click="details()">
+      <div class="listCon">
+        <div class="numberList">1</div>
+        <div class="name">张三</div>
+        <div class="phone">18912345623</div>
+        <div class="state">待提</div>
       </div>
-      <div class="cartList">
-        <div style="height:2.86rem;">
-          <div class="imgCon"><img src="../assets/shangpin.png" alt=""></div>
-          <div class="textCon">
-            <div>[安丘馆] 小西红柿</div>
-            <div><div style="display:inline-block;color:#000000;font-weight:100;">25kg</div>   <div style="display:inline-block;">X200 (份)</div> </div>
-          </div>
-          <div class="inputCon">
-            <div>-</div>
-            <input type="text" value="5">
-            <div>+</div>
-          </div>
-        </div>
-        <div class="zhuCon"><label for="">备注:</label><input placeholder="单行输入" type="text"></div>
-      </div>
-      <div class="subBtn"><button>提交核查</button></div>
+      <div class="clear"></div>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -75,12 +74,17 @@ export default{
           that.time = str
         }
       })
+    },
+    details () {
+      this.$router.push({
+        path: '/goodsDetail'
+      })
     }
   }
-}
+} 
 </script>
 <style scoped>
-.goods{
+.selfLifting{
   background-color: #f5f5f5;
   height: 100vh;
   padding-top: 2rem;
@@ -126,104 +130,92 @@ export default{
 .number{
   color: #FF3C00;
 }
-.cartList{
+.searchBtn{
   width: 100%;
-  height: 4.76rem;
+  height: 2.6rem;
+  line-height: 2.6rem;
+  background-color: #ffffff;
   margin-top: 0.4rem;
-  background-color: #ffffff;
-  padding-left: 0.44rem;
-  padding-right: 0.46rem;
-}
-.imgCon{
-  display:inline-block;
-  width: 2.1rem;
-  height: 2.1rem;
+  padding-left: 0.48rem;
   position: relative;
-  top: -1.2rem;
+  margin-bottom: 0.2rem;
 }
-.imgCon img{
-  width: 100%;
-}
-.textCon{
-  display: inline-block;
-  margin-top: 0.52rem;
-  font-weight: bold;
-  margin-left: 0.54rem;
-}
-.textCon :nth-child(1){
-  font-size: 0.6rem
-}
-.textCon :nth-child(2){
-  font-size: 0.52rem;
-  color: #FF3C00;
-  margin-top: 0.1rem;
-}
-.inputCon{
-  /* display: inline-block; */
-  float: right;
-  margin-top: 0.76rem;
-}
-.inputCon :nth-child(1){
+.searchBtn input{
+  width: 10.64rem;
+  height: 1.4rem;
   background-color: #f5f5f5;
-}
-.inputCon :nth-child(2){
-  background-color: #eeeeee;
-}
-.inputCon :nth-child(3){
-  background-color: #eeeeee;
-}
-.inputCon input{
+  border: 0.02rem solid #e4e4e4;
+  text-indent: 2em;
+  border-radius: 0.12rem;
+  background-image: url(../assets/icon_sousuo@2x.png);
+  background-repeat: no-repeat;
+  background-size: 0.7rem 0.7rem;
+  background-position: 0.25rem 0.32rem;
+  color: #666666;
   font-size: 0.56rem;
-  width: 1.6rem;
-  height: 1.32rem;
-  line-height: 1.32rem;
-  font-weight: bold;
-  text-align: center;
 }
-.inputCon div{
+.searchBtn div{
+  height: 1.4rem;
+  width: 3rem;
+  background-color: #f5f5f5;
+  border: 0.02rem solid #e4e4e4;
+  text-align: center;
+  line-height: 1.4rem;
+  margin-left: 0.2rem;
   display: inline-block;
+  border-radius: 0.12rem;
+  font-size: 0.64rem;
+  color: #333333;
+  font-weight:bold;
+}
+.searchBtn span{
+  position: absolute;
+  width: 0.7rem !important;
+  height: 0.7rem !important;
+  background-image: url(../assets/icon_sousuo_guanbi@2x.png);
+  background-repeat: no-repeat;
+  background-size: 0.7rem 0.7rem;
+  top: 0.92rem;
+  left:10.08rem; 
+}
+.list{
+  padding-left: 0.48rem;
+  width: 100%;
+  height: 2rem;
+  background-color: #ffffff;
+}
+.listCon{
+  width: 100%;
+  height: 2rem;
+  line-height: 2rem;
+  background-color: #ffffff;
+  border-bottom: 0.02rem solid #eeeeee;
+  font-size: 0.6rem;
+  background-image: url(../assets/icon_jiantou@2x.png);
+  background-repeat: no-repeat;
+  background-size: 0.6rem 0.6rem;
+  background-position: 13.4rem 0.7rem;
+}
+.numberList{
+  float: left;
   font-weight: bold;
-  font-size: 0.56rem;
-  width: 1.6rem;
-  height: 1.32rem;
-  line-height: 1.32rem;
-  text-align: center;
 }
-.zhuCon{
-  width: 100%;
-  height: 1.38rem;
-  line-height: 1.38rem;
-  font-size: 0.56rem;
+.name{
+  float: left;
+  font-weight: bold;
+  margin-left: 1.2rem;
+  max-width: 3rem;
+  height: 2rem;
+  overflow: hidden;
 }
-.zhuCon :nth-child(1){
-  font-weight: bolder;
+.phone{
+  float: left;
+  font-weight: bold;
+  margin-left: 1.7rem;
 }
-.zhuCon input{
-  width: 12.4rem;
-  height: 1.38rem;
-  border: 0.02rem solid #999999;
-  border-radius: 0.08rem;
-  margin-left: 0.32rem;
-  text-indent: 1em;
-}
-.subBtn{
-  position: fixed;
-  bottom: 0;
-  background-color: #ffffff;
-  height: 1.96rem;
-  line-height: 2.1rem;
-  text-align: center;
-  width: 100%;
-  border-top: 0.02rem solid #DCDCDC;
-}
-.subBtn button{
-  background-color: #ffffff;
-  margin: auto;
-  width: 12rem;
-  height: 1.6rem;
-  border: 0.04rem solid #FF3C00;
-  border-radius: 0.8rem;
-  font-size: 0.68rem;
-  color: #FF3C00;
+.state{
+  float: right;
+  margin-right: 1.3rem;
 }
 </style>
+
