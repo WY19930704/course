@@ -11,12 +11,13 @@
       <div>查询</div>
       <span></span>
     </div>
-    <div class="list" @click="details()">
+    <div class="list" @click="details(item)" v-for="(item,index) in list" :key="index">
       <div class="listCon">
-        <div class="numberList">1</div>
-        <div class="name">张三</div>
-        <div class="phone">18912345623</div>
-        <div class="state">待提</div>
+        <div class="numberList">{{index + 1}}</div>
+        <div class="name">{{item.takeName}}</div>
+        <div class="phone">{{item.phone}} </div>
+        <div v-if="item.orderState==3" class="state" style="color:#FF3C00">待提</div>
+        <div v-if="item.orderState==5" class="state">已提</div>
       </div>
       <div class="clear"></div>
     </div>
@@ -30,11 +31,14 @@ export default{
   data () {
     return {
       time: '',
-      unfinished: '11',
-      finished: '2'
+      unfinished: '',
+      finished: '',
+      list:[]
     }
   },
   created() {
+    const userId = sessionStorage.getItem('id')
+    const expressId = sessionStorage.getItem('promotersId')
     //获取当前时间
     let now = new Date()
     let year = now.getFullYear()
@@ -50,6 +54,29 @@ export default{
     }
     let str = month +'/' + day + weekDay[dt.getDay()]
     this.time = str
+    let timeStr = year + '-' + month + '-' + day
+    //待收实收数量
+    let data = new URLSearchParams()
+    // data.append('estimateDate',timeStr)
+    data.append('estimateDate','2018-05-09')
+    data.append('expressId',expressId)
+    data.append('userId',userId)
+    data.append('sendType',1)
+    this.axios.post('/ykds-jingcai/app/jingcai/yuangong/orderCount',data).then(res => {
+      this.unfinished = res.data.obj.notFinishCount
+      this.finished = res.data.obj.finishCount
+    })
+    let params = new URLSearchParams()
+    params.append('estimateDate',timeStr)
+    // params.append('estimateDate','2018-05-09')
+    params.append('expressId',expressId)
+    params.append('userId',userId)
+    params.append('sendType',1)
+    params.append('pageSize',100)
+    params.append('pageNo',1)
+    this.axios.post('/ykds-jingcai/app/jingcai/yuangong/orderList',params).then(res => {
+      this.list = res.data.obj.list
+    })
   },
   methods: {
     pickData () {
@@ -72,12 +99,37 @@ export default{
           }
           let str = month +'/' + day + weekDay[dt.getDay()]
           that.time = str
+          const userId = sessionStorage.getItem('id')
+          const expressId = sessionStorage.getItem('promotersId')
+          let timeStr = year + '-' + month + '-' + day
+          //待收实收数量
+          let data = new URLSearchParams()
+          data.append('estimateDate',timeStr)
+          // data.append('estimateDate','2018-05-09')
+          data.append('expressId',expressId)
+          data.append('userId',userId)
+          data.append('sendType',1)
+          that.axios.post('/ykds-jingcai/app/jingcai/yuangong/orderCount',data).then(res => {
+            that.unfinished = res.data.obj.notFinishCount
+            that.finished = res.data.obj.finishCount
+          })
+          let params = new URLSearchParams()
+          params.append('estimateDate',timeStr)
+          // params.append('estimateDate','2018-05-09')
+          params.append('expressId',expressId)
+          params.append('userId',userId)
+          params.append('sendType',1)
+          params.append('pageSize',100)
+          params.append('pageNo',1)
+          that.axios.post('/ykds-jingcai/app/jingcai/yuangong/orderList',params).then(res => {
+            that.list = res.data.obj.list
+          })
         }
       })
     },
-    details () {
+    details (item) {
       this.$router.push({
-        path: '/goodsDetail'
+        path: `/Detail/${item.id}`
       })
     }
   }
@@ -98,6 +150,7 @@ export default{
   font-weight: bold;
   position: fixed;
   top: 0;
+  z-index: 999;
 }
 .title div{
   display: inline-block;
@@ -215,6 +268,7 @@ export default{
 }
 .state{
   float: right;
+  color:#666666;
   margin-right: 1.3rem;
 }
 </style>

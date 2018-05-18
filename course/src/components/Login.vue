@@ -6,7 +6,7 @@
     <div class="formContainer">
       <form action="">
         <input v-model="account" id="account" placeholder="请输入账号" type="text">
-        <input v-model="password" placeholder="请输入密码" type="password" name="" id="password">
+        <input v-model="password" placeholder="请输入密码" type="password" name="" id="password"  autocomplete=’tel’>
         <button @click="submit()" id="submit" type="submit">登录</button>
       </form>
     </div>
@@ -23,20 +23,23 @@ export default {
   },
   methods: {
     submit () {
-       this.$router.push({
-        path: `/index`
+      let account = this.account
+      let password = this.password
+      let data = new URLSearchParams()
+      data.append('admin', account)
+      data.append('password', password)
+      this.axios.post("/ykds-jingcai/app/jingcai/yuangong/login",data).then(res => {
+        console.log(res)
+        sessionStorage.setItem('id',res.data.obj.id)
+        sessionStorage.setItem('promotersId',res.data.obj.promotersId)
+        sessionStorage.setItem('postName',res.data.obj.postName)
+        sessionStorage.setItem('promotersId',res.data.obj.promotersId)
+        if(res.data.code == 200){
+            this.$router.push({
+            path: `/index`
+          })
+        }
       })
-      // let account = this.account
-      // let password = this.password
-      // let data = new URLSearchParams()
-      // data.append('admin', account)
-      // data.append('password', password)
-      // this.axios.post("/ykds-jingcai/app/jingcai/jcUser/login",data).then(res => {
-      //   console.log(res)
-      //   if(res.data.code == 200){
-         
-      //   }
-      // })
     }
   }
 }

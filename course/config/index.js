@@ -43,8 +43,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/ykds-jingcai/app/jingcai': {
-            // 'http://weixintest.zhenshengxin.cn/api'
-            target: 'http://10.0.0.19:8080/',
+            // target:'http://10.0.0.19:8080/',
+            target: 'http://60.173.235.235:5521/',
             changeOrigin: true,
             pathRewrite: {
                 '^/ykds-jingcai/app/jingcai': '/ykds-jingcai/app/jingcai'

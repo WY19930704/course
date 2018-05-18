@@ -6,36 +6,74 @@
         <div class="finished">实收: <div class="number">{{finished}}</div></div>
         <div class="clear"></div>
       </div>
-      <div class="cartList">
+      <div class="cartList" v-for="(item,index) in cartList" :key="index">
         <div style="height:2.86rem;">
-          <div class="imgCon"><img src="../assets/shangpin.png" alt=""></div>
+          <div class="imgCon"><img :src="item.mainImg" alt=""></div>
           <div class="textCon">
-            <div>[安丘馆] 小西红柿</div>
-            <div><div style="display:inline-block;color:#000000;font-weight:100;">25kg</div>   <div style="display:inline-block;">X200 (份)</div> </div>
+            <div style="width:6rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; ">	{{item.goodsName}}</div>
+            <div>
+              <div style="display:inline-block;color:#000000;font-weight:100;">{{item.goodsSpeciName}}</div>
+              <div style="display:inline-block;">X{{item.amount}} (份)</div>
+              <div class="clear"></div>
+            </div>
           </div>
+          
           <div class="inputCon">
-            <div>-</div>
-            <input type="text" value="5">
-            <div>+</div>
+            <div @click="minus(item)">-</div>
+            <div>{{item.getAmount}}</div> 
+            <div @click="add(item)">+</div>
           </div>
         </div>
-        <div class="zhuCon"><label for="">备注:</label><input placeholder="单行输入" type="text"></div>
+        <div class="zhuCon"><label for="">备注:</label><input placeholder="单行输入" v-model="item.remarks" type="text"></div>
       </div>
-      <div class="subBtn"><button>提交核查</button></div>
+      <div v-show="show" class="subBtn"><button @click="submit()">提交核查</button></div>
   </div>
 </template>
 <script>
+const userId = sessionStorage.getItem('id')
+const expressId = sessionStorage.getItem('promotersId')
 import weuis from 'weui'
 import weui from 'weui.js'
 export default{
   data () {
     return {
+      show:true,
       time: '',
-      unfinished: '11',
-      finished: '2'
+      unfinished: '',
+      finished: 0,
+      num:'',
+      cartList:[]
     }
   },
   created() {
+    let data = new URLSearchParams()
+    data.append('userId',userId)
+    data.append('expressId',expressId)
+    data.append('pageSize',10000)
+    data.append('pageNo',1)
+    data.append('queryDate','')
+    this.axios.post("/ykds-jingcai/app/jingcai/yuangong/getPostLogs",data).then(res =>{
+      if(res.data.obj.count == 0){
+              this.cartList = []
+              this.finished = 0
+              this.unfinished = 0
+              this.show = false
+            }
+            else{
+              for(let i = 0;i < res.data.obj.list.length;i++){
+                this.unfinished = this.unfinished*1
+                this.unfinished += parseInt(res.data.obj.list[i].amount)  - parseInt(res.data.obj.list[i].getAmount)
+                this.finished +=  parseInt(res.data.obj.list[i].getAmount)
+              }
+              for(let i = 0;i < res.data.obj.list.length;i++){
+              res.data.obj.list[i].getAmount = parseInt(res.data.obj.list[i].amount) 
+              }
+              this.cartList = res.data.obj.list
+              if(this.cartList[0].postStatus == 3){
+                this.show = false
+              }
+            }
+    })
     //获取当前时间
     let now = new Date()
     let year = now.getFullYear()
@@ -49,10 +87,49 @@ export default{
     if(day < 10){
       day = '0' + day
     }
+    let timeGo = year + '-' + month + '-' + day
+    
     let str = month +'/' + day + weekDay[dt.getDay()]
     this.time = str
   },
   methods: {
+    //数量加减
+    add (item) {
+
+      if(item.getAmount >= item.amount){
+        return
+      }
+      item.getAmount ++
+    },
+    minus (item) {
+      if(item.getAmount <= 1){
+        return
+      }
+      item.getAmount --
+    },
+    // 表单提交
+    submit () {
+      let objs = {
+        userId:userId,
+        logs:[]
+      }
+      for(let i = 0;i < this.cartList.length;i++){
+        let obj = {
+          id:this.cartList[i].id,
+          remarks:this.cartList[i].remarks,
+          postStatus:3,
+          getAmount:this.cartList[i].getAmount,
+        }
+        objs.logs.push(obj)
+      }
+      let data = new URLSearchParams()
+      data.append('params',JSON.stringify(objs))
+      this.axios.post('/ykds-jingcai/app/jingcai/yuangong/savePostLogs',data).then(res => {
+        console.log(res)
+      })
+      console.log(objs)
+    },
+    //日期选择
     pickData () {
       var that = this
       weui.datePicker({
@@ -73,6 +150,35 @@ export default{
           }
           let str = month +'/' + day + weekDay[dt.getDay()]
           that.time = str
+          let timeStr = year + '-' + month + '-' + day
+          let data = new URLSearchParams()
+          data.append('userId',userId)
+          data.append('expressId',expressId)
+          data.append('pageSize',10000)
+          data.append('pageNo',1)
+          data.append('queryDate',timeStr)
+          that.axios.post("/ykds-jingcai/app/jingcai/jcPostLog/getPostLogs",data).then(res =>{
+            if(res.data.obj.count == 0){
+              that.cartList = []
+              that.finished = 0
+              that.unfinished = 0
+              that.show = false
+            }
+            else{
+              for(let i = 0;i < res.data.obj.list.length;i++){
+                that.unfinished = that.unfinished*1
+                that.unfinished += parseInt(res.data.obj.list[i].amount)  - parseInt(res.data.obj.list[i].getAmount)
+                that.finished +=  parseInt(res.data.obj.list[i].getAmount)
+              }
+              for(let i = 0;i < res.data.obj.list.length;i++){
+              res.data.obj.list[i].getAmount = parseInt(res.data.obj.list[i].amount) 
+              }
+              that.cartList = res.data.obj.list
+              if(that.cartList[0].postStatus == 3){
+                that.show = false
+              }
+            } 
+          })
         }
       })
     }
@@ -94,6 +200,7 @@ export default{
   font-weight: bold;
   position: fixed;
   top: 0;
+  z-index: 999;
 }
 .title div{
   display: inline-block;

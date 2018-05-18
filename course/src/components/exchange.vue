@@ -93,6 +93,7 @@ export default{
   font-weight: bold;
   position: fixed;
   top: 0;
+  z-index: 999;
 }
 .title div{
   display: inline-block;

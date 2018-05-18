@@ -2,7 +2,7 @@
     <div class="index">
         <div class="title">
             <div class="titleImg"><img src="../assets/icon_tihuodian_dizhi@2x.png" alt=""></div>
-            <div class="titlePlace">千城大厦提货点</div>
+            <div class="titlePlace">{{postName}}</div>
         </div>
         <div class="content">
             <div class="conL">
@@ -36,11 +36,17 @@
     </div>
 </template>
 <script>
+
 export default{
   data () {
     return {
-
+        postName:''
     }
+  },
+  created () {
+      const postName = sessionStorage.getItem('postName')
+      this.postName = postName
+      console.log(this.postName)
   },
   methods: {
     checked () {
